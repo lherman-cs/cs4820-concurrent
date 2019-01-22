@@ -1,0 +1,70 @@
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+
+public class TestThread {
+
+   public static void main(final String[] arguments) throws InterruptedException, ExecutionException {
+      // Gets the number of processors on the machine and prints it
+      int nThreads = Runtime.getRuntime().availableProcessors();
+      System.out.println(nThreads);
+      // defines an array of integers of length 16000 
+      int[] numbers = new int[16000];
+      //initilizes the array in-order from 0-15999
+      for (int i = 0; i < numbers.length; i++) {
+         numbers[i] = i;
+      }
+      // Creates a pool of threads from which to assign work to 
+      ForkJoinPool forkJoinPool = new ForkJoinPool(nThreads);
+      // Computes the end result by sending the work out to threads in the pool
+      Long result = forkJoinPool.invoke(new Sum(numbers, 0, numbers.length));
+      // Print the end result of the computation
+      System.out.println(result);
+   }
+
+   static class Sum extends RecursiveTask<Long> {
+      // defines data members of the class Sum
+      int low;
+      int high;
+      int[] array;
+
+      // defines a basic constructor
+      Sum(int[] array, int low, int high) {
+         this.array = array;
+         this.low = low;
+         this.high = high;
+      }
+      // defines a method of the Sum class called compute
+      protected Long compute() {
+         // If the amount of numbers within the range we are summing is less 
+         //    than or equal to the min_chunk_size, do the computation in serial
+         if (high - low <= 1) {
+            long sum = 0;
+
+            for (int i = low; i < high; ++i)
+               sum += array[i];
+            return sum;
+         } 
+         // otherwise, do the computation concurrently with extra concurrency on top
+         //    we split the problem in half
+         else {
+            // the midpoint if two incidies will follow this formula, which we 
+            //    will round to an int
+            int mid = low + (high - low) / 2;
+            // define new sum object for the two sub-arrays, left and right
+            Sum left = new Sum(array, low, mid);
+            Sum right = new Sum(array, mid, high);
+            // fork on one of the sub-arrays to allow for the computation to 
+            //     be concurrentized
+            left.fork();
+            // we again call compute on the right sub-array, this computes the
+            //     result with the current thread
+            long rightResult = right.compute();
+            // uses a new thread to compute the left thread
+            long leftResult = left.join();
+            // return the computation of the left and right sub-arrays
+            return leftResult + rightResult;
+         }
+      }
+   }
+}
