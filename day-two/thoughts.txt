@@ -1,0 +1,12 @@
+Lukas Herman (lukash) and Gabrielle Stewart (gestewa)
+
+9. On one of the test, the output was 20, 20, and 10, 20 in all other tests.
+Because of data races, and before thread 1 gets the value to print, thread
+2 has already saved it's value as 20. Usually (10,20) thread one finishes first
+before thread two has even started incrementing it seems. This would be
+as a result of scheduler algorithms.
+
+10. On one of the test, the output was 11, 11, and 20, 20 in all other tests.
+This is expected because of data races too. This scenario is really similar
+to what happened in the animation on the slide, where the counter is not
+incremented properly.
