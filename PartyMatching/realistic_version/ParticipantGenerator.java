@@ -11,21 +11,12 @@ class ParticipantGenerator implements Runnable {
 
   @Override
   public void run() {
-    // Random random = new Random();
-    // ParticipantType type;
+    int n = 1;
 
-    // switch (random.nextInt(2)) {
-    // case 0:
-    // type = ParticipantType.Superhero;
-    // break;
-    // default:
-    // type = ParticipantType.Sidekick;
-    // break;
-    // }
-
-    for (int i = 0; i < 1; i++) {
-      this.party.arrive(type);
-      this.party.leave(type);
+    for (int i = 0; i < n; i++) {
+      Participant participant = type == ParticipantType.Superhero ? new Superhero() : new Sidekick();
+      this.party.arrive(participant);
+      this.party.leave(participant);
     }
   }
 }
