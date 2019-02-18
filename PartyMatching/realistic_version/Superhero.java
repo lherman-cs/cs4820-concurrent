@@ -34,9 +34,6 @@ public class Superhero extends Participant {
     }
 
     private synchronized void onAccept(boolean yes) {
-        if (!yes) {
-            System.out.println("Superhero " + id + " got rejected");
-        }
         waiting = false;
         accepted = yes;
         this.notifyAll();
