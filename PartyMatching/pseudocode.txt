@@ -1,0 +1,114 @@
+CLASS ParticipantGenerator
+
+  DEFINE initialize ParticipantGenerator(party, genType)
+    party = party
+    type = genType
+  ENDDEF
+  
+  DEFINE run()
+    n = 100 // any positive number
+    WHILE n > 0 DO
+      IF type == 0 THEN
+        participant = new Superhero()
+      ELSE
+        participant = new Sidekick()
+      ENDIF
+
+      party.enter(participant)
+      party.leave(participant)
+      n--
+    ENDWHILE
+  ENDDEF
+
+ENDCLASS
+
+
+CLASS Party
+
+  DEFINE initialize Party()
+    sidekicks = new ArrayBlockingQueue()
+  ENDDEF
+
+  DEFINE arrive(participant)
+    IF participant == Superhero THEN
+      PRINTLN "Superhero", participant.id, "arrives"
+    ELSE
+      PRINTLN "Sidekick", participant.id, "arrives"
+      sidekicks.add(participant)
+    ENDIF
+  ENDDEF
+
+  DEFINE leave(participant)
+    IF participant == Superhero THEN
+      superhero = participant
+      WHILE true DO
+        sidekick = sidekicks.take()
+        IF superhero.invite(sidekick) THEN
+          EXIT
+        ELSE
+          sidekicks.add(sidekick)
+        ENDIF
+      DONE
+      PRINTLN "Superhero", superhero.id, "exits party"
+    ELSE
+      sidekick = participant
+      WHILE NOT sidekick.accept() DO
+      ENDWHILE
+
+      PRINTLN "Sidekick", sidekick.id, "exits party"
+    ENDIF
+  ENDDEF
+
+ENDCLASS
+
+CLASS Superhero
+
+  DEFINE initialize Superhero()
+    id = random_unused_integer
+    accepted = false
+    waiting = false
+    PRINTLN "Superhero", id, "created"
+  ENDDEF
+
+  DEFINE invite(sidekick)
+    waiting = true
+    PRINTLN "Superhero", id, "invites Sidekick", sidekick.id
+    sidekick.receive(onAccept)
+    WHILE waiting DO
+      WAIT()
+    ENDWHILE
+    return accepted
+  ENDDEF
+
+  DEFINE onAccept(yes)
+    waiting = false
+    accepted = yes
+    NOTIFY()
+  ENDDEF
+
+ENDCLASS
+
+CLASS Sidekick
+
+  DEFINE initialize Sidekick()
+    id = random_unused_integer
+    invitation = NULL
+    PRINTLN "Sidekick", id, "created" 
+  ENDDEF
+
+  DEFINE receive(onAccept)
+    invitation = onAccept
+    NOTIFY()
+  ENDDEF
+
+  DEFINE accept()
+    WHILE invitation==NULL DO
+      WAIT()
+    ENDWHILE
+    yes = randNum(0,1)
+    invitation.accept(yes)
+    invitation = NULL
+    return yes
+  ENDDEF
+
+ENDCLASS
