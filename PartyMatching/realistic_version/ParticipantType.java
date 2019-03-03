@@ -1,0 +1,3 @@
+enum ParticipantType {
+  Superhero, Sidekick;
+}
