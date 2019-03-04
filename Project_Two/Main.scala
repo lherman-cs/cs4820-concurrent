@@ -1,27 +1,25 @@
-//import Recursion._
+import Recursion._
 
 object Main {
   
   def main(args: Array[String]) {
-    println("step 2: print function")
+    println("Step 2: Star Tree")
     myPrint()
-    println()
     
-    println("step 3: recursive algorithm")
+    println("\nStep 3: Pascal Triangle")
     // args(0) is number of lines of Pascal triangle to print
-    //printPascal(args(0).toInt)	
-    printPascal(10)	
-    /*
+    printPascal(args(0).toInt)	
+
+    println("\nStep 4: Count Change")
     // args(1) is the amount of money for which to calculate the number of combinations for change
-    printCountChange(args(1).toInt, List(1, 5, 10))	
-    
+    // printCountChange(args(1).toInt, List(1, 5, 10))	
+    printCountChange(10, List(1,5,10));
     
     // arg2 and arg3 are parenthesized strings to be validated
+    println("\nStep 5: Balance Parentheses")
     printBalance(args(2))
     printBalance(args(3))
     println()
-        
-    */
   }  
   
   def myPrint(){
@@ -45,13 +43,10 @@ object Main {
       println()
     }
   }
- /* 
   def printCountChange(money:Int, coins:List[Int]): Unit = {
     println("Number of ways to give change for " + money + " is: " + countChange(money, coins))
   }
-  */
 
-  /*
   def printBalance(expression:String): Unit = {
     if (balance(expression.toList)) {
       println("expression: " + expression + " is balanced")
@@ -59,6 +54,5 @@ object Main {
       println("expression: " + expression + " is not balanced")
       }
   }
-  */
 }
 
