@@ -10,23 +10,16 @@ public class BadProducer implements Runnable {
     }
 
     public void run() {
-        String importantInfo[] = {
-            "Mares eat oats",
-            "Does eat oats",
-            "Little lambs eat ivy",
-            "A kid will eat ivy too"
-        };
+        String importantInfo[] = { "Mares eat oats", "Does eat oats", "Little lambs eat ivy",
+                "A kid will eat ivy too" };
         Random random = new Random();
 
-        for (int i = 0;
-             i < importantInfo.length;
-             i++) {
+        for (int i = 0; i < importantInfo.length; i++) {
             drop.put(who, importantInfo[i]);
-//	    try {
-//               Thread.sleep(random.nextInt(5));
- //          } catch (InterruptedException e) {}
+            // try {
+            // Thread.sleep(random.nextInt(5));
+            // } catch (InterruptedException e) {}
         }
         drop.put(who, "DONE");
     }
 }
-

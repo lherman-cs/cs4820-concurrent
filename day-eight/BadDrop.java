@@ -1,3 +1,4 @@
+// Rewrite the Drop application so Producers & Consumers wait in different wait sets.
 
 public class BadDrop {
     // Message sent from producer to consumer.
@@ -6,45 +7,58 @@ public class BadDrop {
     // empty is True if consumer should wait for producer to send message,
     // false if producer should wait for consumer to retrieve message.
     private boolean empty = true;
+    // locks for producer and consumer wait queue
+    private Object producerLock = new Object();
+    private Object consumerLock = new Object();
 
-    public synchronized String take() {
-        // Wait until message is available.
-        if (empty) {  
-            try {
-                wait();
-            } catch (InterruptedException e) {}
+    public String take() {
+        String messageCopy;
+        synchronized (consumerLock) {
+            // Wait until message is available.
+            while (empty) {
+                try {
+                    consumerLock.wait();
+                } catch (InterruptedException e) {
+                }
+            }
+
+            // Toggle status.
+            empty = true;
+            messageCopy = message;
         }
-
- 
-        // Toggle status.
-        empty = true;
 
         // Notify producer that
         // status has changed.
-        notifyAll();
-	
-        return message;
-    }
-
-    public synchronized void put(int who, String message) {
-        // Wait until message has
-        // been retrieved.
-        if (!empty) {
-            try { 
-                wait();
-            } catch (InterruptedException e) {}
+        synchronized (producerLock) {
+            producerLock.notifyAll();
         }
 
+        return messageCopy;
+    }
 
-	System.out.format("%d:putting message : %s %n", who, message);
-        // Toggle status.
-        empty = false;
+    public void put(int who, String message) {
+        synchronized (producerLock) {
+            // Wait until message has
+            // been retrieved.
+            while (!empty) {
+                try {
+                    producerLock.wait();
+                } catch (InterruptedException e) {
+                }
+            }
 
-        // Store message.
-        this.message = message;
+            System.out.format("put:%s\n", message);
+            // Toggle status.
+            empty = false;
+
+            // Store message.
+            this.message = message;
+        }
 
         // Notify consumer that status
         // has changed.
-        notifyAll();
+        synchronized (consumerLock) {
+            consumerLock.notifyAll();
+        }
     }
 }

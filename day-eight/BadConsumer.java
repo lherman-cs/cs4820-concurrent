@@ -11,15 +11,11 @@ public class BadConsumer implements Runnable {
 
     public void run() {
         Random random = new Random();
-        for (String message = drop.take();
-             ! message.equals("DONE");
-             message = drop.take()) {
-            System.out.format("%d:MESSAGE RECEIVED: %s%n", who, message);
-	    /*
-            try {
-                Thread.sleep(random.nextInt(0));
-            } catch (InterruptedException e) {}
-	    */
+        for (String message = drop.take(); !message.equals("DONE"); message = drop.take()) {
+            System.out.format("take:%s\n", message);
+            /*
+             * try { Thread.sleep(random.nextInt(0)); } catch (InterruptedException e) {}
+             */
         }
     }
 }

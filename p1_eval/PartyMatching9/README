@@ -1,0 +1,9 @@
+
+Notes
+
+I could not figure out how to move all of the diagrams into a single PDF, so
+I just put them into a folder called UML. The state diagram is only for party
+because our Superhero and Sidekick classes did not contain any methods, so I 
+wasn't sure how to go about that in a state diagram.
+
+
