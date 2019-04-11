@@ -1,0 +1,36 @@
+Vincent Lee
+CSCI4900
+
+--------------------------------------
+The program was written on Python 3.3
+--------------------------------------
+
+I soft installed it on my nike account, and everything
+runs except the last one. Must be nike's ssl certificate
+is not valid anymore.
+
+Note: I have done all the CSCI6900 only problems as well.
+I enjoyed the python coding style, a lot more than scala.
+I just thought that the extra credit dealt with my department
+of expertise, Web Income.
+
+The extra information in the html file is for passing:
+This document was successfully checked as HTML 4.01 Strict!
+As with all things, there are standards.
+After running the program one can visit this site and paste
+the html source code.
+
+http://validator.w3.org/check
+
+Step 5: Animal
+The animal appears to be a human in a bunny suit.
+He/She is reading a book while sitting down on a park bench, with
+his/her bookbag on his/her left.
+
+Some Example Runs:
+python main.py
+python wordcount.py --topcount alice.txt 100
+python wordcount.py --count small.txt
+python mimic.py alice.txt world 20
+python logpuzzle.py --todir animal animal_code.google.com
+
