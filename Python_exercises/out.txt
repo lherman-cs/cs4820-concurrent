@@ -1,0 +1,62 @@
+myPrint
+    *
+   ***
+  *****
+ *******
+*********
+
+String: both_ends
+spring -> spng
+hello -> helo
+google -> gole
+a -> 
+ -> 
+
+String: fix_start
+babble -> ba**le
+aardvark -> a*rdv*rk
+google -> goo*le
+donut -> donut
+
+String: mix_up
+('mix', 'pod') -> pox mid
+('dog', 'dinner') -> dig donner
+('gnash', 'sport') -> spash gnort
+('pezzy', 'firm') -> fizzy perm
+
+String: not_bad
+This movie is not so bad -> This movie is good
+This dinner is not that bad! -> This dinner is good!
+This tea is not hot -> This tea is not hot
+It is bad yet not -> It is bad yet not
+
+String: font_back
+('abcd', 'xy') -> abxcdy
+('abcde', 'xyz') -> abcxydez
+('Kitten', 'Donut') -> KitDontenut
+
+List: match_ends
+['aba', 'xyz', 'aa', 'x', 'bbb'] -> 3
+['', 'x', 'xy', 'xyx', 'xx'] -> 2
+['aaa', 'be', 'abc', 'hello'] -> 1
+
+List: front_x
+['bbb', 'ccc', 'axx', 'xzz', 'xaa']  ->  ['xaa', 'xzz', 'axx', 'bbb', 'ccc']
+['ccc', 'bbb', 'aaa', 'xcc', 'xaa']  ->  ['xaa', 'xcc', 'aaa', 'bbb', 'ccc']
+['mix', 'xyz', 'apple', 'xanadu', 'aardvark']  ->  ['xanadu', 'xyz', 'aardvark', 'apple', 'mix']
+
+List: sort_last
+[(1, 3), (3, 2), (2, 1)]  ->  [(2, 1), (3, 2), (1, 3)]
+[(2, 3), (1, 2), (3, 1)]  ->  [(3, 1), (1, 2), (2, 3)]
+[(1, 7), (1, 3), (3, 4, 5), (2, 2)]  ->  [(2, 2), (1, 3), (3, 4, 5), (1, 7)]
+
+List: remove_adjacent
+[1, 2, 2, 3]  ->  [1, 2, 3]
+[2, 2, 3, 3, 3]  ->  [2, 3]
+[]  ->  []
+
+List: linear_merge
+(['aa', 'xx', 'zz'], ['bb', 'cc'])  ->  ['aa', 'bb', 'cc', 'xx', 'zz']
+(['aa', 'xx'], ['bb', 'cc', 'zz'])  ->  ['aa', 'bb', 'cc', 'xx', 'zz']
+(['aa', 'aa'], ['aa', 'bb', 'bb'])  ->  ['aa', 'aa', 'aa', 'bb', 'bb']
+

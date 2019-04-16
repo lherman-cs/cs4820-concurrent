@@ -12,7 +12,7 @@ def match_ends(words):
 
 
 def front_x(words):
-    words.sort()
+    words = sorted(words)
     left = []
     right = []
     for word in words:
@@ -29,6 +29,7 @@ def sort_last(tuples):
 
 
 def remove_adjacent(nums):
+    nums = nums[:]
     l, r = 0, 0
     n = len(nums)
     while r < n:

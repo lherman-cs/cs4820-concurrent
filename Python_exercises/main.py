@@ -8,7 +8,7 @@ def myPrint():
     rows = 5
     stars = 1
     for row in range(rows):
-        print(' ' * (rows - row) + '*' * stars)
+        print(' ' * (rows - row - 1) + '*' * stars)
         stars += 2
 
 # a predefined main function
@@ -62,7 +62,7 @@ def main():
     print("List: front_x")
     cases = ast.literal_eval(configurator.get_conf('List', 'front_x'))
     for case in cases:
-        print(case, ' -> ', mylist.front_x(case))
+            print(case, ' -> ', mylist.front_x(case))
     print()
 
     print("List: sort_last")
@@ -83,15 +83,15 @@ def main():
         print(case, ' -> ', mylist.linear_merge(case[0], case[1]))
     print()
 
-    print("Remote:")
-    width = ast.literal_eval(configurator.get_conf('Remote', 'width'))
-    x = ast.literal_eval(configurator.get_conf('Remote', 'x'))
-    y = ast.literal_eval(configurator.get_conf('Remote', 'y'))
-    remote = remotekeypad.remotekeypad(width, x, y)
-    cases = ast.literal_eval(configurator.get_conf('Remote', 'keys'))
-    for case in cases:
-        remote.get_moves(case)
-        print()
+    # print("Remote:")
+    # width = ast.literal_eval(configurator.get_conf('Remote', 'width'))
+    # x = ast.literal_eval(configurator.get_conf('Remote', 'x'))
+    # y = ast.literal_eval(configurator.get_conf('Remote', 'y'))
+    # remote = remotekeypad.remotekeypad(width, x, y)
+    # cases = ast.literal_eval(configurator.get_conf('Remote', 'keys'))
+    # for case in cases:
+    #     remote.get_moves(case)
+    #     print()
 
 
 # Standard boilerplate to call the main() function.
