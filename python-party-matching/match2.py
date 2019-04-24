@@ -46,15 +46,25 @@ class Party:
 
     # when a superhero tries to leave,
     def __superhero_checkout(self):
+        # use this done boolean to allow to be rescheduled if we were not able
+        #   to complete as planned
+        done = False
         while True:
             # wait here for participant generator to tell to leave
-            yield
+            yield done
 
+            # there is no valid sidekicks to send invitations to
             if len(self.kick_coroutines) == 0:
+                done = False
                 continue
 
+            # we found someone to send an invitation to
+            done = True
+
+            # this is the state of our invitation
             accepted = False
 
+            # callback for sidekick to respond to our invitation
             def accept():
                 nonlocal accepted
                 accepted = True
@@ -141,12 +151,21 @@ def participant_generator(i, hero, party):
     checkin = party.superhero_checkin if hero else party.sidekick_checkin
     checkout = party.superhero_checkout if hero else party.sidekick_checkout
 
+    # there is a case where the superhero cannot proceed when there are no
+    #   sidekicks in the party to send invitations to
+    # so, we want to make sure everyone is scheduled perfectly, these
+    #   extra checks (with i and done) allow for that to happen
+
+    i = 0
     # for each participant
-    for _ in range(n):
+    while i < n:
         # enter party
         checkin()
         # exit party
-        next(checkout)
+        done = next(checkout)
+        # only increment i when appropriate
+        if (hero and done) or not hero:
+            i += 1
         # wait to be scheduled again (wait to be told to generate again)
         yield
 
