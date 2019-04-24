@@ -8,67 +8,97 @@ import random
 #       sidekick_checkin
 #       superhero_checkout
 #       sidekick_checkout
-# generator function participant_generator(name, role, party)
-#   generate 10 party participants in total (randomly either all superheros or all sidekicks)
+# participant generator
+#   function participant_generator(name, role, party)
 #   Whenever a participant is generated, it should be sent to the party
 #       If it is not possible for it to leave, the generator object
 #       should yield for others to proceed.
 #   After all generated participants leave the party, this generator object should stop.
-#    Participant behavior:
+#   Participant behavior:
 #      find partner
 #      leave
 
 
 class Party:
-    heros = {}
-    num_heros = 0
-    kicks = {}
-    num_kicks = 0
-    pair = 0
 
     def __init__(self):
+        # coroutine wrappers
+        self.superhero_checkout = self.__superhero_checkout()
+        self.sidekick_checkout = self.__sidekick_checkout()
+        self.gate = self.__gate()
+
+        # start up the coroutines
+        next(self.superhero_checkout)
+        next(self.sidekick_checkout)
+        next(self.gate)
+
+        # data about party state
+        self.kicks = 0
+        self.heros = 0
+        self.pair = 0
+
+    def superhero_checkin(self):
         pass
 
-    def superhero_checkin(self, i, hero):
-        self.heros[i] = (hero, False)
-        self.num_heros += 1
+    def sidekick_checkin(self):
+        pass
 
-    def sidekick_checkin(self, i, kick):
-        self.kicks[i] = (kick, False)
-        self.num_kicks += 1
-
-    def superhero_checkout(self, i):
-        while self.num_kicks == 0:
+    # when a superhero tries to leave,
+    def __superhero_checkout(self):
+        while True:
+            # wait here for participant generator to tell to leave
             yield
+            # notify the gate that the hero is trying to leave
+            self.gate.send("hero")
 
-        kick = next(kick[0] for kick in self.kicks.values() if kick[1])
-        kick.send(i)
+    # when a sidekick tries to leave,
+    def __sidekick_checkout(self):
+        while True:
+            yield
+            self.gate.send("kick")
 
-    def sidekick_checkout(self, i):
-        coroutine, _ = self.kicks[i]
-        self.kicks[i] = (coroutine, True)
-        hero_id = -1
+    # gate method, controls exiting process
+    def __gate(self):
+        while True:
+            # message from the participant's call to checkout
+            role = (yield)
 
-        while self.num_heros == 0 or hero_id == -1:
-            hero_id = (yield)
+            # determines who is trying to leave
+            if role == "hero":
 
-        self.num_kicks -= 1
-        del self.kicks[i]
-        print(hero_id)
-        self.num_heros -= 1
-        del self.heros[hero_id]
-        self.pair += 1
+                # if we cannot leave, record the entering
+                if self.kicks == 0:
+                    self.heros += 1
+                    continue
+
+                # if we can leave, leave with partner
+                self.kicks -= 1
+            else:
+                if self.heros == 0:
+                    self.kicks += 1
+                    continue
+                self.heros -= 1
+
+            # record pair leaving
+            self.pair += 1
 
 
 def participant_generator(i, hero, party):
+    # number of participants to generate
     n = 10
+
+    # store the functions (for cleaner calling)
     checkin = party.superhero_checkin if hero else party.sidekick_checkin
     checkout = party.superhero_checkout if hero else party.sidekick_checkout
 
+    # for each participant
     for _ in range(n):
-        coroutine = checkout(i)
-        checkin(i, coroutine)
-        yield from coroutine
+        # enter party
+        checkin()
+        # exit party
+        next(checkout)
+        # wait to be scheduled again (wait to be told to generate again)
+        yield
 
 
 def main():
@@ -86,8 +116,7 @@ def main():
         participants.append(pg)
 
     t0 = time.time()
-    # while len(participants) > 0 and time.time() - t0 < 5:
-    while len(participants) > 0 and min(num_heros, num_kicks) != int(p.pair):
+    while len(participants) > 0 and time.time() - t0 < 5:
         task = random.choice(participants)
         try:
             next(task)
